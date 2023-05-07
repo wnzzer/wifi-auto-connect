@@ -26,7 +26,7 @@ public class AutoConnectWifi {
     public void autoConnect() {
 
         System.out.println("hello world,软件开始运行...并非卡死，请勿终止");
-        inputConfig();
+        initConfig();
         try {
             InetAddress localHost = InetAddress.getLocalHost();
             router = "http://" + localHost.getHostAddress().split("\\.")[0] + ".0.0.1";
