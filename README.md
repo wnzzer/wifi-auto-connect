@@ -55,6 +55,8 @@
 
 #### 安装教程
 
+##### 1.源码版本（release版本使用类似）
+
 1. **git源码（或者下载源码）**
 
 ```sheel
@@ -91,6 +93,8 @@ operator=yd
 ```sheel
 java AutoConnectWifi
 ```
+
+##### docker版本
 
 #### 参与贡献
 

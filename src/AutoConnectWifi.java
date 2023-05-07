@@ -1,10 +1,11 @@
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.net.*;
 import java.util.HashMap;
 import java.util.Properties;
+import java.util.Scanner;
+import java.util.function.Function;
+import java.util.prefs.BackingStoreException;
+import java.util.prefs.Preferences;
 
 public class AutoConnectWifi {
 
@@ -25,6 +26,7 @@ public class AutoConnectWifi {
     public void autoConnect() {
 
         System.out.println("hello world,软件开始运行...并非卡死，请勿终止");
+        inputConfig();
         try {
             InetAddress localHost = InetAddress.getLocalHost();
             router = "http://" + localHost.getHostAddress().split("\\.")[0] + ".0.0.1";
@@ -81,6 +83,9 @@ public class AutoConnectWifi {
             userNumber = properties.getProperty("username");
             passwd = properties.getProperty("password");
             operator = properties.getProperty("operator");
+            if(userNumber == null || userNumber.length() <= 1){
+                while (!inputConfig());
+            }
             // 打印输出
             System.out.println("已获取username: " + userNumber);
             System.out.println("已获取password: " + passwd);
@@ -89,6 +94,53 @@ public class AutoConnectWifi {
             e.printStackTrace();
         }
     }
+
+    /**
+     * 输入配置信息
+     * @return 配置失败
+     */
+    public boolean inputConfig(){
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("请输入校园网帐号");
+        userNumber = scanner.next();
+        System.out.println("请输入校园网密码");
+        passwd = scanner.next();
+        System.out.println("请输入运营商：1：移动，2：联通，3：电信，输入其他重新输入");
+        operator = ((Function<Integer, String>) (Integer i) -> {
+            if (i == 1) {return "yd";
+            } else if (i == 2) {
+                return "lt";
+            } else if (i == 3) {
+                return "dx";
+            } return null;})
+                .apply(scanner.nextInt());
+        outputConfig();
+        if(operator == null){
+            return false;
+        }else {
+            return true;
+        }
+
+    }
+
+    /**
+     * 输出手动输入的配置到文件
+     */
+    public void outputConfig(){
+        Preferences prefs = Preferences.userRoot().node("myApp");
+        prefs.put("username", userNumber);
+        prefs.put("password",passwd);
+        prefs.put("operator",operator);
+        File iniFile = new File("authentication.conf");
+        try {
+            prefs.exportNode(new FileOutputStream(iniFile));
+        } catch (IOException e) {
+            System.out.println("保存配置失败");
+        } catch (BackingStoreException e) {
+            System.out.println("保存配置失败");
+        }
+    }
+
     /**
      * 获取接口地址
      */
