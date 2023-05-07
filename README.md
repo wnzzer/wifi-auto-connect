@@ -1,39 +1,97 @@
 # wifi-auto-connect
 
-#### 介绍
-{**以下是 Gitee 平台说明，您可以替换此简介**
-Gitee 是 OSCHINA 推出的基于 Git 的代码托管平台（同时支持 SVN）。专为开发者提供稳定、高效、安全的云端软件开发协作平台
-无论是个人、团队、或是企业，都能够用 Gitee 实现代码托管、项目管理、协作开发。企业项目请看 [https://gitee.com/enterprises](https://gitee.com/enterprises)}
+#### 1. 介绍
 
-#### 软件架构
-软件架构说明
+河南科技学院校园网自动登陆（新乡的很多系统相似，可能也可以用？），java版。可以实现电脑，路由器，软路由的自动认证wifi,后续会上传docker版本的。
+系统如下图。
+![img.png](img%2Fimg.png)
+#### 2.软件架构
 
+**<font color = green>采用jdk8</font>**
+
+**1.大致实现思想：**
+
+抓包最后的请求接口，通过请求接口达到认证
+
+最后发现`/quickauth.do`的get接口是最后实现的关键
+
+**2.通过该get接口我发现可以直接登陆校园wifi**：
+
+`[http://172.18.249.222:6060/quickauth.do?userid=20211554217@kjxyyd&passwd=Wang15238791265&wlanuserip=10.102.41.73&wlanacname=HIST-BRAS&wlanacIp=172.18.247.17&ssid=&vlan=32003272&mac=f4:ce:23:f9:9b:88&version=0&portalpageid=47×tamp=1682562683888&uuid=3c30a228-3e44-4dd7-8aee-ac1100bd2578&portaltype=0&hostname=&bindCtrlId=](http://172.18.249.222:6060/quickauth.do?userid=20211554217@kjxyyd&passwd=Wang15238791265&wlanuserip=10.102.41.73&wlanacname=HIST-BRAS&wlanacIp=172.18.247.17&ssid=&vlan=32003272&mac=f4:ce:23:f9:9b:88&version=0&portalpageid=47&timestamp=1682562683888&uuid=3c30a228-3e44-4dd7-8aee-ac1100bd2578&portaltype=0&hostname=&bindCtrlId=)`
+
+
+
+3.**下面是我对该get接口的query参数的简单说明**
+
+**下面是参数说明**，带“*”的是参数必须项：
+
+- uerid ： 校园网帐号+学院缩写+运营商
+
+- passwd ： 校园网密码
+
+- wlanuserip ： 被分配ip，ac所分配的ap,和mac同时作为入网证明。
+
+- wlanacname ： wifi 名称，不能不填，用于区分教师和学生wifi
+
+- vlan ： vlan
+
+- mac ： ap mac地址
+  wlanacIp ： ac地址，经测试可以不填，猜测是valn和分配的地址直接限定了ac设备
+  version ： 版本 应该没什么卵用
+  portalpageid ： 暂时不知道是什么
+  timestamp ： 毫秒时间戳
+  uuid ： 登陆唯一识别id 我猜测随便编一个就成，没卵用
+  portaltype ： 认证方式 我们学校好像就一种，没卵用
+  hostname ： 暂时没什么用
+  bindCtrlId ： 暂时没什么用
+  
+  <font color = green>我舍弃不必要的参数，获取一个较为精简的脚本，发现可以认证wifi。</font>
+
+```sheel
+  curl 'http://172.18.249.222:6060/quickauth.do?userid=20211554217@kjxyyd&passwd=Wang15238791265&wlanuserip=10.102.41.73&wlanacname=HIST-BRAS&vlan=32003272&mac=f4:ce:23:f9:9b:88'
+```
+
+当然这样写不具有通用性，按照这个思路我写了一个较为通用的java程序，类似我们学校的校园网应该都可以用的。。。吧？。
 
 #### 安装教程
 
-1.  xxxx
-2.  xxxx
-3.  xxxx
+1. **git源码（或者下载源码）**
 
-#### 使用说明
+```sheel
+git clone https://gitee.com/chenbaifu/wifi-auto-connect.git
+```
 
-1.  xxxx
-2.  xxxx
-3.  xxxx
+2. **切换至工程目录**
+
+```sheel
+cd wifi-auto-connect
+```
+
+3. **编译源码**
+
+```sheel
+javac AutoConnectWifi.java
+```
+
+4.**设置配置文件**
+
+对工程里的`authentication.conf`进行校园网帐号，密码，运营商的配置
+
+```ini
+#校园网帐号
+username=13678593474
+#校园网密码
+password=swa32323
+#校园网运营商 移动为=yd,联通为lt,电信为dx.
+operator=yd
+```
+
+5.运行
+
+```sheel
+java AutoConnectWifi
+```
 
 #### 参与贡献
 
-1.  Fork 本仓库
-2.  新建 Feat_xxx 分支
-3.  提交代码
-4.  新建 Pull Request
-
-
-#### 特技
-
-1.  使用 Readme\_XXX.md 来支持不同的语言，例如 Readme\_en.md, Readme\_zh.md
-2.  Gitee 官方博客 [blog.gitee.com](https://blog.gitee.com)
-3.  你可以 [https://gitee.com/explore](https://gitee.com/explore) 这个地址来了解 Gitee 上的优秀开源项目
-4.  [GVP](https://gitee.com/gvp) 全称是 Gitee 最有价值开源项目，是综合评定出的优秀开源项目
-5.  Gitee 官方提供的使用手册 [https://gitee.com/help](https://gitee.com/help)
-6.  Gitee 封面人物是一档用来展示 Gitee 会员风采的栏目 [https://gitee.com/gitee-stars/](https://gitee.com/gitee-stars/)
+暂无
