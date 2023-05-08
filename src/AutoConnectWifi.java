@@ -34,8 +34,10 @@ public class AutoConnectWifi {
             System.out.println("没有获取到网络适配器，请检查wifi或者网线是否连接");
         }
         while (true){
+            System.out.println("检测网络连接（50秒检测一次）。。。。，");
             //如果没网就进行连接
             if (!isNodeReachable("www.bing.com")){
+                System.out.println("网络未认证，尝试认证。。。");
                 getHost();
                 searchSchool();
                 loginWifi();
@@ -61,12 +63,32 @@ public class AutoConnectWifi {
     public  final boolean isNodeReachable(String hostname) {
         try {
             InetAddress address = InetAddress.getByName(hostname);
-            return address.isReachable(1000); // Specify a timeout in milliseconds
+             if (!address.isReachable(1000)){
+                 return isPingIPReachable(hostname);
+             }else {
+                 return true;
+             }
         } catch (IOException e) {
             // Handle the exception
             return false;
         }
     }
+
+    /**
+     *
+     * @param hostname 网址
+     * @return 是否正常上网
+     * 同时同时检测网络
+     */
+    private static final boolean isPingIPReachable(String hostname) {
+        try {
+            return 0 == Runtime.getRuntime().exec("ping -c 1 " + hostname).waitFor();
+        } catch (InterruptedException | IOException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
 
     /**
      * 初始化用户参数
