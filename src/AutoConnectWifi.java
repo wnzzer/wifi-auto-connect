@@ -36,7 +36,7 @@ public class AutoConnectWifi {
         while (true){
             System.out.println("检测网络连接（50秒检测一次）。。。。，");
             //如果没网就进行连接
-            if (!isNodeReachable("www.bing.com")){
+            if (!isNodeReachable("https://cn.bing.com")){
                 System.out.println("网络未认证，尝试认证。。。");
                 getHost();
                 searchSchool();
@@ -61,29 +61,24 @@ public class AutoConnectWifi {
      * 感觉这个方法也不是很好用
      */
     public  final boolean isNodeReachable(String hostname) {
+        String url = "https://cn.bing.com/";
         try {
-            InetAddress address = InetAddress.getByName(hostname);
-             return address.isReachable(2000);
-        } catch (IOException e) {
-            // Handle the exception
+            URL obj = new URL(url);
+            HttpURLConnection con = (HttpURLConnection) obj.openConnection();
+            con.setRequestMethod("GET");
+            con.setConnectTimeout(3000);
+            int responseCode = con.getResponseCode();
+            if (responseCode == HttpURLConnection.HTTP_OK) {
+                return true;
+            } else {
+                return false;
+            }
+        } catch (Exception e) {
             return false;
         }
     }
 
-    /**
-     *
-     * @param hostname 网址
-     * @return 是否正常上网
-     * 同时同时检测网络
-     */
-    private static final boolean isPingIPReachable(String hostname) {
-        try {
-            return 0 == Runtime.getRuntime().exec("ping -c 1 " + hostname).waitFor();
-        } catch (InterruptedException | IOException e) {
-            e.printStackTrace();
-            return false;
-        }
-    }
+
 
 
     /**
