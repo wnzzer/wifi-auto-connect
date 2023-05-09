@@ -110,7 +110,7 @@ password=
 #校园网运营商 移动为=yd,联通为lt,电信为dx.
 operator=yd
 ```
-wq保存推出即可。  
+wq保存退出即可。  
 
 3.**启动容器**
 ```shell
