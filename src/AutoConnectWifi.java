@@ -63,11 +63,7 @@ public class AutoConnectWifi {
     public  final boolean isNodeReachable(String hostname) {
         try {
             InetAddress address = InetAddress.getByName(hostname);
-             if (!address.isReachable(1000)){
-                 return isPingIPReachable(hostname);
-             }else {
-                 return true;
-             }
+             return address.isReachable(2000);
         } catch (IOException e) {
             // Handle the exception
             return false;
