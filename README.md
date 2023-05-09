@@ -24,18 +24,18 @@
 3.**下面是我对该get接口的query参数的简单说明**
 
 **下面是参数说明**，带“*”的是参数必须项：
+```ini
+* uerid ： 校园网帐号+学院缩写+运营商
 
-- uerid ： 校园网帐号+学院缩写+运营商
+* passwd ： 校园网密码
 
-- passwd ： 校园网密码
+* wlanuserip ： 被分配ip，ac所分配的ap,和mac同时作为入网证明。
 
-- wlanuserip ： 被分配ip，ac所分配的ap,和mac同时作为入网证明。
+* wlanacname ： wifi 名称，不能不填，用于区分教师和学生wifi
 
-- wlanacname ： wifi 名称，不能不填，用于区分教师和学生wifi
+* vlan ： vlan
 
-- vlan ： vlan
-
-- mac ： ap mac地址
+* mac ： ap mac地址  
   wlanacIp ： ac地址，经测试可以不填，猜测是valn和分配的地址直接限定了ac设备
   version ： 版本 应该没什么卵用
   portalpageid ： 暂时不知道是什么
@@ -44,6 +44,7 @@
   portaltype ： 认证方式 我们学校好像就一种，没卵用
   hostname ： 暂时没什么用
   bindCtrlId ： 暂时没什么用
+```
   
   <font color = green>我舍弃不必要的参数，获取一个较为精简的脚本，发现可以认证wifi。</font>
 
