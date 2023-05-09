@@ -95,13 +95,13 @@ java AutoConnectWifi
 ```
 
 ##### 2.docker安装
-1.建立配置文件(这里随意即可，不一定非得是home目录)
+1.**建立配置文件(这里随意即可，不一定非得是home目录)**
 ```shell
 mkdir /home/wifi-config/conf
 cd /home/wifi-config/conf
 vi authentication.conf
 ```
-2.编辑配置文件
+2.**编辑配置文件**
 ```shell
 #校园网帐号
 username=
@@ -110,8 +110,9 @@ password=
 #校园网运营商 移动为=yd,联通为lt,电信为dx.
 operator=yd
 ```
-wq保存推出即可。
-3.启动容器
+wq保存推出即可。  
+
+3.**启动容器**
 ```shell
 sudo docker run -d --net=host -v /home/wifi-config/conf:/opt/conf --name=autowifi-demo chenbaifu/schoolwifi-auto
 ```
